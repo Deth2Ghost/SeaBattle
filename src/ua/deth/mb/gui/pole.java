@@ -193,7 +193,13 @@ public class pole extends JPanel  {
 			// Обработчик события при нажатии на кнопку Новая игра
 			public void actionPerformed(ActionEvent arg0) {
 				// Выход их игры -завершение работы приложения
-				exit();
+				System.exit(0);
+				try {
+					myGame.exit(name);
+				} catch (RemoteException | ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		add(btn2);
@@ -366,16 +372,6 @@ public class pole extends JPanel  {
 			e2.printStackTrace();
 		}
 	}
-	public int exit(){
-		try {
-			myGame.exit(name);
-		} catch (RemoteException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.exit(0);
-		return 0;
-		
-	}
+	
 	
 }

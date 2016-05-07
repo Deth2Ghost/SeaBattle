@@ -19,7 +19,7 @@ public class okno extends JFrame {
 		// Границы окна: расположение и размеры
 		setBounds(0, 0, 1200, 600);
 		// Операция при закрытии окна - завершение приложения
-		setDefaultCloseOperation(pan.exit());
+		setDefaultCloseOperation(0);
 		// Запрет изменения размеров окна
 		setResizable(false);
 		// Отображение (показ) окна
