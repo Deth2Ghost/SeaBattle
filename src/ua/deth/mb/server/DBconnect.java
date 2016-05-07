@@ -76,7 +76,7 @@ public class DBconnect {
 	// Выход из игры
 	public void exit(String name) throws ClassNotFoundException, SQLException{
 		Conn();
-		statmt.execute("update login set isOnline=0 where login='"+name+"'");
+		statmt.execute("update login set isOnline='0' where login='"+name+"'");
 		
 	}
 
