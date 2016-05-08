@@ -73,11 +73,11 @@ public class Login extends JDialog {
 		setBounds(100, 100, 432, 258);
 		getContentPane().setLayout(null);
 		setResizable(false);
-		
+		// Две панели для выбоа типа вход/регистрация
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 11, 413, 215);
 		getContentPane().add(tabbedPane);
-		
+		// панель на вход
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Вход", null, panel, null);
 		panel.setLayout(null);
@@ -106,6 +106,7 @@ public class Login extends JDialog {
 							}else{
 								enterPassword.setText("");
 								errorLogin.setText("");
+								// Проверка логина и пароля по базе данных
 								try {
 									int i = 5;
 									i = log.login(login, passwd);
@@ -137,6 +138,7 @@ public class Login extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
+				//Кнопка выхода
 				JButton cancelButton = new JButton("Выход");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -184,7 +186,7 @@ public class Login extends JDialog {
 		panel.add(errorLogin);
 		
 		
-		
+		// панель регистраци
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Регистрация", null, panel_1, null);
 		panel_1.setLayout(null);
@@ -236,15 +238,18 @@ public class Login extends JDialog {
 				String login = textLoginRegister.getText();
 				String password = String.copyValueOf(textPasswordREgister.getPassword());
 				String email = textFieldEmail.getText();
+				// Проверка полей на наличие значений
 				if(!login.isEmpty()){
 					if(!password.isEmpty()){
 						if(!email.isEmpty()){
+							//Проверка имени на уникальность и регистрация
 							try {
 								int i = 5;
 								i = log.register(login, password, email);
 								if(i == 1){
 									loginErrorR.setText("Такое имя уже есть");
 								}
+								
 								if(i == 0){
 									new okno(login);
 									
@@ -268,7 +273,7 @@ public class Login extends JDialog {
 		});
 		btnRegister.setBounds(71, 148, 114, 23);
 		panel_1.add(btnRegister);
-		
+		// кнопка выхода
 		JButton btnExit = new JButton("Выход");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

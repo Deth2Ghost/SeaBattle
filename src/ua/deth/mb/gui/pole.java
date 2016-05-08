@@ -101,7 +101,7 @@ public class pole extends JPanel  {
 
 	// Конструктор класса
 	public pole(String name) {
-		// Создаем объект новой игры
+		// Создаем объект новой игры и подключаемся к серверу RMI
 				try {
 					myGame = (gameI)Naming.lookup("MBGame");
 				} catch (MalformedURLException | RemoteException | NotBoundException e) {
@@ -109,9 +109,10 @@ public class pole extends JPanel  {
 					e.printStackTrace();
 				}
 		this.name = name;
-		// Подключаем обработчики события для мыши к панели
+		// Создаем массив игрока и компьютера
 		masPl = new int[10][10];
 		masSop = new int[10][10];
+		// Наполняем массив игрока и компьютера
 		lRasstanovka = new Rasstanovka();
 		masPl = lRasstanovka.Rasstanovka(masPl);
 		masSop = lRasstanovka.Rasstanovka(masSop);
@@ -122,7 +123,7 @@ public class pole extends JPanel  {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
+		// Подключаем обработчики события для мыши к панели
 		addMouseListener(new myMouse1());
 		addMouseMotionListener(new myMouse2());
 		setFocusable(true); // Передаем фокус панели
