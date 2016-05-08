@@ -131,8 +131,9 @@ public void setCompHod(boolean compHod) throws RemoteException{
 	}
  
 	// Выстрел игрока
-	public void vistrelPlay(int i, int j) throws RemoteException{
+	public int[][] vistrelPlay(int[][] masC, int i, int j) throws RemoteException{
 		// При выстреле прибавляем число 7
+		masComp = masC;
 		masComp[i][j] += 7;
 		// Проверяем убит ли корабль
 		testUbit(masComp, i, j);
@@ -145,6 +146,8 @@ public void setCompHod(boolean compHod) throws RemoteException{
 			while (compHod == true)
 				compHod = compHodit();
 		}
+		masC = masComp;
+		return masC;
 	}
 
 	// Выстрел компьютера -
