@@ -75,9 +75,11 @@ public class DBconnect {
 	
 	// Выход из игры
 	public void exit(String name) throws ClassNotFoundException, SQLException{
-		Conn();
-		statmt.execute("update login set isOnline='0' where login='"+name+"'");
 		
+		Conn();
+		statmt = conn.createStatement();
+		statmt.execute("update login set isOnline=0 where login='"+name+"'");
+		System.out.println("Игрок" + name + " вышел.");
 	}
 
 	// --------Получаем список пользователей--------
@@ -91,8 +93,11 @@ public class DBconnect {
 			
 		}
 		if (loginOnline.isEmpty()) loginOnline.add(new String("Игроков нет"));
-		System.out.println("Соединения закрыты");
+		System.out.println("Список игроков получен");
 		return loginOnline;
+	}
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		new DBconnect().exit("Deth");
 	}
 
 

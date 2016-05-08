@@ -116,19 +116,7 @@ public void setCompHod(boolean compHod) throws RemoteException{
 			analizUbit(mas, i, j, 4);
 	}
 
-	// Расстановка кораблей
-	private void rasstanovkaKorabley(int[][] mas) {
-		// Создаем один четырехпалубный корабль
-		make4P(mas, 4);
-		// Создаем два трехпалубных корабля
-		for (int i = 1; i <= 2; i++)
-			make4P(mas, 3);
-		// Создаем три двухпалубных корабля
-		for (int i = 1; i <= 3; i++)
-			make4P(mas, 2);
-		// Создаем четыре однопалубных корабля
-		make1P(mas);
-	}
+	
  
 	// Выстрел игрока
 	public int[][] vistrelPlay(int[][] masC, int i, int j) throws RemoteException{
@@ -366,27 +354,7 @@ public void setCompHod(boolean compHod) throws RemoteException{
 		}
 	}
 
-	// Создание четырех однопалубных кораблей
-	private void make1P(int[][] mas) {
-		// Циклfor делает четыре шага - для четырех кораблей
-		for (int k = 1; k <= 4; k++) {
-			// Глухой циклwhile
-			while (true) {
-				// Находим случайную позицию на игровом поле
-				int i = (int) (Math.random() * 10);
-				int j = (int) (Math.random() * 10);
-				// Проверяем, что там ничего нет и можно разместить корабль
-				if (mas[i][j] == 0) {
-					// Размещаем однопалубный корабль
-					mas[i][j] = 1;
-					// Выполняем окружение
-					okrBegin(mas, i, j, -1);
-					// Прерываем цикл
-					break;
-				}
-			}
-		}
-	}
+	
 
 	// Проверка ячейки для возможности размещения в ней палубы корабля
 	private boolean testNewPaluba(int[][] mas, int i, int j) {
@@ -399,91 +367,7 @@ public void setCompHod(boolean compHod) throws RemoteException{
 		return false;
 	}
 
-	// Создание корабля с несколькими палубами от 2-х до 4-х
-	private void make4P(int[][] mas, int kolPaluba) {
-		// Глухой цикл
-		while (true) {
-
-			boolean flag = false;
-
-			// Координаты головы корабля
-			int i = 0, j = 0;
-
-			// Создание первой палубы - головы корабля
-			// Получение случайной строки
-			i = (int) (Math.random() * 10);
-			// Получение случайной колонки
-			j = (int) (Math.random() * 10);
-			// Выбираем случайное направление построения корабля
-			// 0 - вверх, 1 -вправо, 2 - вниз, 3 - влево
-			int napr = (int) (Math.random() * 4);
-			if (testNewPaluba(mas, i, j) == true) {
-				if (napr == 0) // вверх
-				{
-					// Если можно расположить палубу
-					if (testNewPaluba(mas, i - (kolPaluba - 1), j) == true)
-						flag = true;
-				} else if (napr == 1) // вправо
-				{
-					// Если можно расположить палубу
-					if (testNewPaluba(mas, i, j + (kolPaluba - 1)) == true)
-						flag = true;
-				} else if (napr == 2) // вниз
-				{
-					// Если можно расположить палубу
-					if (testNewPaluba(mas, i + (kolPaluba - 1), j) == true)
-						flag = true;
-				} else if (napr == 3) // влево
-				{
-					// Если можно расположить палубу
-					if (testNewPaluba(mas, i, j - (kolPaluba - 1)) == true)
-						flag = true;
-				}
-			}
-			if (flag == true) {
-				// Помещаем в ячейку число палуб
-				mas[i][j] = kolPaluba;
-				// Окружаем минус двойками
-				okrBegin(mas, i, j, -2);
-				if (napr == 0) // вверх
-				{
-					for (int k = kolPaluba - 1; k >= 1; k--) {
-						// Помещаем в ячейку число палуб
-						mas[i - k][j] = kolPaluba;
-						// Окружаем минус двойками
-						okrBegin(mas, i - k, j, -2);
-					}
-				} else if (napr == 1) // вправо
-				{
-					for (int k = kolPaluba - 1; k >= 1; k--) {
-						// Помещаем в ячейку число палуб
-						mas[i][j + k] = kolPaluba;
-						// Окружаем минус двойками
-						okrBegin(mas, i, j + k, -2);
-					}
-				} else if (napr == 2) // вниз
-				{
-					for (int k = kolPaluba - 1; k >= 1; k--) {
-						// Помещаем в ячейку число палуб
-						mas[i + k][j] = kolPaluba;
-						// Окружаем минус двойками
-						okrBegin(mas, i + k, j, -2);
-					}
-				} else if (napr == 3) // влево
-				{
-					for (int k = kolPaluba - 1; k >= 1; k--) {
-						// Помещаем в ячейку число палуб
-						mas[i][j - k] = kolPaluba;
-						// Окружаем минус двойками
-						okrBegin(mas, i, j - k, -2);
-					}
-				}
-				break;
-			}
-		}
-		// Конечное окружение
-		okrEnd(mas);
-	}
+	
 	public ArrayList userOnline() throws RemoteException, ClassNotFoundException{
 		ArrayList users = new ArrayList<>();
 		try {
@@ -495,13 +379,15 @@ public void setCompHod(boolean compHod) throws RemoteException{
 		return users;
 		
 	}
-	public void exit(String login)throws RemoteException, ClassNotFoundException{
+	public int exit(String login)throws RemoteException, ClassNotFoundException{
 		try {
 			new DBconnect().exit(login);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return 1;
 		
 	}
 }

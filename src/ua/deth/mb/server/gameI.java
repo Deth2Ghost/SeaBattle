@@ -22,7 +22,7 @@ public interface gameI extends Remote{
 	public ArrayList userOnline()throws RemoteException, ClassNotFoundException;
 	public void setMasPlay(int[][] masPlay)throws RemoteException ;
 	public void setMasComp(int[][] masComp)throws RemoteException;
-	public void exit(String login)throws RemoteException, ClassNotFoundException;
+	public int exit(String login)throws RemoteException, ClassNotFoundException;
 	
 	
 }
