@@ -18,10 +18,12 @@ public class Server {
 			r = LocateRegistry.createRegistry(1099);
 			server = new game();
 			login = new Login();
+			// RMI логина
 			r.bind("MB", login);
+			// RMI игры
 			r.bind("MBGame", server);
 			for (int i = 0; i < r.list().length; i++) {
-				System.out.println(r.list()[i]);
+				System.out.println(r.list()[i]+" Сервер запущен");
 				
 			}
 			
