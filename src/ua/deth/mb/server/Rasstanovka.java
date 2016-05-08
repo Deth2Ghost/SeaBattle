@@ -1,8 +1,12 @@
 package ua.deth.mb.server;
 
-public class Rasstanovka{
+import java.rmi.RemoteException;
 
-public Rasstanovka() {
+public class Rasstanovka{
+	
+
+public Rasstanovka()  {
+	
 	// TODO Auto-generated constructor stub
 }
 	public int[][] Rasstanovka(int[][] masPlay) {
@@ -187,5 +191,5 @@ public Rasstanovka() {
 		// Конечное окружение
 		okrEnd(mas);
 	}
-
+	
 }

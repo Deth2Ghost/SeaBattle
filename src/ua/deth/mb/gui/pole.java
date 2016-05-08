@@ -60,9 +60,11 @@ public class pole extends JPanel  {
 							// Вычисляем номер элемента в строке в массиве
 							int j = (mX - 100) / 30;
 							// Если ячейка подходит для выстрела
-							if (myGame.getMasComp()[i][j] <= 4)
+							if (masSop[i][j] <= 4)
 								// Производим выстрел
-								myGame.vistrelPlay(i, j);
+								myGame.setMasPlay(masPl);
+								masSop = myGame.vistrelPlay(masSop,i, j);
+								masPl = myGame.getMasPlay();
 						}
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
@@ -116,13 +118,6 @@ public class pole extends JPanel  {
 		lRasstanovka = new Rasstanovka();
 		masPl = lRasstanovka.Rasstanovka(masPl);
 		masSop = lRasstanovka.Rasstanovka(masSop);
-		try {
-			myGame.setMasPlay(masPl);
-			myGame.setMasComp(masSop);
-		} catch (RemoteException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 		// Подключаем обработчики события для мыши к панели
 		addMouseListener(new myMouse1());
 		addMouseMotionListener(new myMouse2());
@@ -244,50 +239,42 @@ public class pole extends JPanel  {
 			for (int j = 0; j < 10; j++) {
 
 				// Игровое поле компьютера
-				try {
-					if (myGame.getMasComp()[i][j] != 0) {
+					if (masSop[i][j] != 0) {
 						// Если это подбитая палуба корабля
-						if ((myGame.getMasComp()[i][j] >= 8) && (myGame.getMasComp()[i][j] <= 11)) {
+						if ((masSop[i][j] >= 8) && (masSop[i][j] <= 11)) {
 							gr.drawImage(ranen, 100 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 						// Если это палуба полностью подбитого корабля
-						else if (myGame.getMasComp()[i][j] >= 15) {
+						else if (masSop[i][j] >= 15) {
 							gr.drawImage(ubit, 100 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 						// Если был выстрел
-						if (myGame.getMasComp()[i][j] >= 5) {
+						if (masSop[i][j] >= 5) {
 							gr.drawImage(bomba, 100 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 					}
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 
 				// Игровое поле игрока
-				try {
-					if (myGame.getMasPlay()[i][j] != 0) {
+				if (masPl[i][j] != 0) {
 						// Если это палуба корабля
-						if ((myGame.getMasPlay()[i][j] >= 1) && (myGame.getMasPlay()[i][j] <= 4)) {
+						if ((masPl[i][j] >= 1) && (masPl[i][j] <= 4)) {
 							gr.drawImage(paluba, 500 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 						// Если это подбитая палуба корабля
-						else if ((myGame.getMasPlay()[i][j] >= 8) && (myGame.getMasPlay()[i][j] <= 11)) {
+						else if ((masPl[i][j] >= 8) && (masPl[i][j] <= 11)) {
 							gr.drawImage(ranen, 500 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 						// Если это палуба полностью подбитого корабля
-						else if (myGame.getMasPlay()[i][j] >= 15) {
+						else if (masPl[i][j] >= 15) {
 							gr.drawImage(ubit, 500 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 						// Если был выстрел
-						if (myGame.getMasPlay()[i][j] >= 5) {
+						if (masPl[i][j] >= 5) {
 							gr.drawImage(bomba, 500 + j * 30, 100 + i * 30, 30, 30, null);
 						}
 					}
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 			}
 		}
 		gr.setColor(Color.RED); // Красный цвет
@@ -301,7 +288,7 @@ public class pole extends JPanel  {
 					// Вычисляем номер элемента в строке в массиве
 					int j = (mX - 100) / 30;
 					// Если ячйека подходит для выстрела
-					if (myGame.getMasComp()[i][j] <= 4)
+					if (masSop[i][j] <= 4)
 						// Рисуем квадрат с заливкой
 						gr.fillRect(100 + j * 30, 100 + i * 30, 30, 30);
 				}
@@ -365,13 +352,7 @@ public class pole extends JPanel  {
 		// Расставляем корабли игрока
 		masPl = lRasstanovka.Rasstanovka(masPl);
 		masSop = lRasstanovka.Rasstanovka(masSop);
-		try {
-			myGame.setMasPlay(masPl);
-			myGame.setMasComp(masSop);
-		} catch (RemoteException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		
 	}
 	
 	

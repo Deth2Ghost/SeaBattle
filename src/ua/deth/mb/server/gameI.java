@@ -15,7 +15,7 @@ public interface gameI extends Remote{
 	// Массив для игрового поля компьютера
 	public int[][] getMasComp() throws RemoteException;
 	// Выстрел игрока
-	public void vistrelPlay(int i, int j) throws RemoteException;
+	public int[][]  vistrelPlay(int[][] masC, int i, int j) throws RemoteException;
 	// Запуск игры - начало игры
 	public void setCompHod(boolean compHod) throws RemoteException;
 	public void setEndg(int endg)throws RemoteException ;
