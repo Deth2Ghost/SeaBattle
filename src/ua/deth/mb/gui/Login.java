@@ -126,6 +126,9 @@ public class Login extends JDialog {
 								} catch (SQLException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+								} catch (MalformedURLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
 								
 							}
@@ -256,6 +259,9 @@ public class Login extends JDialog {
 									setVisible(false);
 								}
 							} catch (RemoteException | ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (MalformedURLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}

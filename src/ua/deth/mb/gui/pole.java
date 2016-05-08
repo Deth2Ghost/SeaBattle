@@ -23,6 +23,10 @@ import java.util.ArrayList;
 
 //Класс панели игрового поля
 public class pole extends JPanel  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -270142160811523852L;
 	String name;
 	// Таймер отрисовки
 	private Timer tmDraw;
@@ -110,6 +114,7 @@ public class pole extends JPanel  {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 		this.name = name;
 		// Создаем массив игрока и компьютера
 		masPl = new int[10][10];
