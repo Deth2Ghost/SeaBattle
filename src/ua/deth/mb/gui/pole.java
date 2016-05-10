@@ -1,10 +1,11 @@
 package ua.deth.mb.gui;
 
-
 // Для обработки событий
 import java.awt.event.*;
 // Для работы с окнами
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import ua.deth.mb.server.Rasstanovka;
 import ua.deth.mb.server.gameI;
@@ -22,7 +23,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 //Класс панели игрового поля
-public class pole extends JPanel  {
+public class pole extends JPanel implements Runnable {
 	/**
 	 * 
 	 */
@@ -33,13 +34,14 @@ public class pole extends JPanel  {
 	// Изображения, используемые в игре
 	private Image fon, paluba, ubit, ranen, end1, end2, bomba;
 	// Две кнопки
-	private JButton btn1, btn2;
+	private JButton btn1, btn2, refresh;
 	// Переменная для реализации логики игры
 	private gameI myGame;
 	// Координаты курсора мыши
 	private int mX, mY;
 	private Rasstanovka lRasstanovka;
 	private JLabel userList;
+	private JList list;
 	private int[][] masPl;
 	private int[][] masSop;
 
@@ -67,8 +69,8 @@ public class pole extends JPanel  {
 							if (masSop[i][j] <= 4)
 								// Производим выстрел
 								myGame.setMasPlay(masPl);
-								masSop = myGame.vistrelPlay(masSop,i, j);
-								masPl = myGame.getMasPlay();
+							masSop = myGame.vistrelPlay(masSop, i, j);
+							masPl = myGame.getMasPlay();
 						}
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
@@ -107,14 +109,15 @@ public class pole extends JPanel  {
 
 	// Конструктор класса
 	public pole(String name) {
+
 		// Создаем объект новой игры и подключаемся к серверу RMI
-				try {
-					myGame = (gameI)Naming.lookup("MBGame");
-				} catch (MalformedURLException | RemoteException | NotBoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+		try {
+			myGame = (gameI) Naming.lookup("MBGame");
+		} catch (MalformedURLException | RemoteException | NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		this.name = name;
 		// Создаем массив игрока и компьютера
 		masPl = new int[10][10];
@@ -128,7 +131,6 @@ public class pole extends JPanel  {
 		addMouseMotionListener(new myMouse2());
 		setFocusable(true); // Передаем фокус панели
 
-		
 		// Запускаем игру
 		try {
 			start();
@@ -194,9 +196,10 @@ public class pole extends JPanel  {
 			// Обработчик события при нажатии на кнопку Новая игра
 			public void actionPerformed(ActionEvent arg0) {
 				// Выход их игры -завершение работы приложения
-				System.exit(0);
+
 				try {
 					myGame.exit(name);
+					System.exit(0);
 				} catch (RemoteException | ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -204,21 +207,7 @@ public class pole extends JPanel  {
 			}
 		});
 		add(btn2);
-		ArrayList u = new ArrayList<>();
-		try {
-			
-			u = myGame.userOnline();
-		} catch (RemoteException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		userList = new JLabel("Список Игроков на сервере");
-		userList.setBounds(950,50,220,50);
-		add(userList);
-		JList list = new JList(u.toArray());
-		list.setBounds(950, 100, 240, 400);
-		
-		add(list);
+		new Thread(this).start();
 	}
 
 	// Метод отрисовки
@@ -236,7 +225,7 @@ public class pole extends JPanel  {
 
 		// Выведение надписей
 		gr.drawString("Компьютер", 190, 50);
-		gr.drawString(name,550, 50);
+		gr.drawString(name, 550, 50);
 
 		// Отрисовка игровых полей Компьютера
 		// и Игрока на основании массивов
@@ -244,47 +233,46 @@ public class pole extends JPanel  {
 			for (int j = 0; j < 10; j++) {
 
 				// Игровое поле компьютера
-					if (masSop[i][j] != 0) {
-						// Если это подбитая палуба корабля
-						if ((masSop[i][j] >= 8) && (masSop[i][j] <= 11)) {
-							gr.drawImage(ranen, 100 + j * 30, 100 + i * 30, 30, 30, null);
-						}
-						// Если это палуба полностью подбитого корабля
-						else if (masSop[i][j] >= 15) {
-							gr.drawImage(ubit, 100 + j * 30, 100 + i * 30, 30, 30, null);
-						}
-						// Если был выстрел
-						if (masSop[i][j] >= 5) {
-							gr.drawImage(bomba, 100 + j * 30, 100 + i * 30, 30, 30, null);
-						}
+				if (masSop[i][j] != 0) {
+					// Если это подбитая палуба корабля
+					if ((masSop[i][j] >= 8) && (masSop[i][j] <= 11)) {
+						gr.drawImage(ranen, 100 + j * 30, 100 + i * 30, 30, 30, null);
 					}
-				
+					// Если это палуба полностью подбитого корабля
+					else if (masSop[i][j] >= 15) {
+						gr.drawImage(ubit, 100 + j * 30, 100 + i * 30, 30, 30, null);
+					}
+					// Если был выстрел
+					if (masSop[i][j] >= 5) {
+						gr.drawImage(bomba, 100 + j * 30, 100 + i * 30, 30, 30, null);
+					}
+				}
 
 				// Игровое поле игрока
 				if (masPl[i][j] != 0) {
-						// Если это палуба корабля
-						if ((masPl[i][j] >= 1) && (masPl[i][j] <= 4)) {
-							gr.drawImage(paluba, 500 + j * 30, 100 + i * 30, 30, 30, null);
-						}
-						// Если это подбитая палуба корабля
-						else if ((masPl[i][j] >= 8) && (masPl[i][j] <= 11)) {
-							gr.drawImage(ranen, 500 + j * 30, 100 + i * 30, 30, 30, null);
-						}
-						// Если это палуба полностью подбитого корабля
-						else if (masPl[i][j] >= 15) {
-							gr.drawImage(ubit, 500 + j * 30, 100 + i * 30, 30, 30, null);
-						}
-						// Если был выстрел
-						if (masPl[i][j] >= 5) {
-							gr.drawImage(bomba, 500 + j * 30, 100 + i * 30, 30, 30, null);
-						}
+					// Если это палуба корабля
+					if ((masPl[i][j] >= 1) && (masPl[i][j] <= 4)) {
+						gr.drawImage(paluba, 500 + j * 30, 100 + i * 30, 30, 30, null);
 					}
-				
+					// Если это подбитая палуба корабля
+					else if ((masPl[i][j] >= 8) && (masPl[i][j] <= 11)) {
+						gr.drawImage(ranen, 500 + j * 30, 100 + i * 30, 30, 30, null);
+					}
+					// Если это палуба полностью подбитого корабля
+					else if (masPl[i][j] >= 15) {
+						gr.drawImage(ubit, 500 + j * 30, 100 + i * 30, 30, 30, null);
+					}
+					// Если был выстрел
+					if (masPl[i][j] >= 5) {
+						gr.drawImage(bomba, 500 + j * 30, 100 + i * 30, 30, 30, null);
+					}
+				}
+
 			}
 		}
 		gr.setColor(Color.RED); // Красный цвет
 		// Если курсор мыши внутри игрового поля компьютера
-		if ((mX > 100) && (mY > 100) && (mX <400) && (mY < 400)) {
+		if ((mX > 100) && (mY > 100) && (mX < 400) && (mY < 400)) {
 			// Если не конец игры и ход игрока
 			try {
 				if ((myGame.getEndg() == 0) && (myGame.isCompHod() == false)) {
@@ -342,7 +330,8 @@ public class pole extends JPanel  {
 			e.printStackTrace();
 		}
 	}
-	public void start() throws RemoteException{
+
+	public void start() throws RemoteException {
 		// Очищаем игровое поле игрока и компьютера
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
@@ -351,14 +340,78 @@ public class pole extends JPanel  {
 			}
 		}
 		// Обнуляем признак чьей-то победы
-		myGame.setEndg(0); 
+		myGame.setEndg(0);
 		// Передаем первый ход игроку
 		myGame.setCompHod(false);
 		// Расставляем корабли игрока
 		masPl = lRasstanovka.Rasstanovka(masPl);
 		masSop = lRasstanovka.Rasstanovka(masSop);
-		
+
 	}
-	
-	
+
+	@Override
+	public void run() {
+		// Аррей лист для списка игроков
+		ArrayList u = null;
+		try {
+
+			u = myGame.userOnline();
+
+		} catch (RemoteException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		userList = new JLabel("Список Игроков на сервере");
+		userList.setBounds(950, 50, 220, 50);
+		add(userList);
+		list = new JList(u.toArray());
+		
+		list.setBounds(950, 100, 240, 400);
+		// Создаем кнопку Обновить список игроков
+		refresh = new JButton();
+		refresh.setText("Обновить");
+		refresh.setForeground(Color.BLUE);
+		refresh.setFont(new Font("serif", 0, 15));
+		refresh.setBounds(950, 450, 100, 30);
+		refresh.addActionListener(new ActionListener() {
+			// Обработчик события при нажатии на кнопку Новая игра
+			public void actionPerformed(ActionEvent arg0) {
+				// Запуск - начало игры
+				try {
+					ArrayList r = myGame.userOnline();
+					list.setListData(r.toArray());
+					list.repaint();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		add(refresh);
+		add(list);
+		ListSelectionListener listL = null;
+		
+		list.addListSelectionListener(listL);
+		while (true) {
+			try {
+				u = myGame.userOnline();
+				list.setListData(u.toArray());
+				list.repaint();
+			} catch (RemoteException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(60000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 }
