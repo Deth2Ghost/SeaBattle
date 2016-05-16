@@ -4,7 +4,6 @@ package ua.deth.mb.gui;
 import java.awt.event.*;
 // Для работы с окнами
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ua.deth.mb.server.Rasstanovka;
@@ -23,7 +22,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 //Класс панели игрового поля
-public class pole extends JPanel implements Runnable {
+public class pole extends JPanel{
 	/**
 	 * 
 	 */
@@ -34,14 +33,13 @@ public class pole extends JPanel implements Runnable {
 	// Изображения, используемые в игре
 	private Image fon, paluba, ubit, ranen, end1, end2, bomba;
 	// Две кнопки
-	private JButton btn1, btn2, refresh;
+	private JButton btn1, btn2;
 	// Переменная для реализации логики игры
 	private gameI myGame;
 	// Координаты курсора мыши
 	private int mX, mY;
 	private Rasstanovka lRasstanovka;
-	private JLabel userList;
-	private JList list;
+
 	private int[][] masPl;
 	private int[][] masSop;
 
@@ -207,7 +205,7 @@ public class pole extends JPanel implements Runnable {
 			}
 		});
 		add(btn2);
-		new Thread(this).start();
+	
 	}
 
 	// Метод отрисовки
@@ -349,69 +347,6 @@ public class pole extends JPanel implements Runnable {
 
 	}
 
-	@Override
-	public void run() {
-		// Аррей лист для списка игроков
-		ArrayList u = null;
-		try {
-
-			u = myGame.userOnline();
-
-		} catch (RemoteException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		userList = new JLabel("Список Игроков на сервере");
-		userList.setBounds(950, 50, 220, 50);
-		add(userList);
-		list = new JList(u.toArray());
-		
-		list.setBounds(950, 100, 240, 400);
-		// Создаем кнопку Обновить список игроков
-		refresh = new JButton();
-		refresh.setText("Обновить");
-		refresh.setForeground(Color.BLUE);
-		refresh.setFont(new Font("serif", 0, 15));
-		refresh.setBounds(950, 450, 100, 30);
-		refresh.addActionListener(new ActionListener() {
-			// Обработчик события при нажатии на кнопку Новая игра
-			public void actionPerformed(ActionEvent arg0) {
-				// Запуск - начало игры
-				try {
-					ArrayList r = myGame.userOnline();
-					list.setListData(r.toArray());
-					list.repaint();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		add(refresh);
-		add(list);
-		ListSelectionListener listL = null;
-		
-		list.addListSelectionListener(listL);
-		while (true) {
-			try {
-				u = myGame.userOnline();
-				list.setListData(u.toArray());
-				list.repaint();
-			} catch (RemoteException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				Thread.sleep(60000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
+	
 
 }

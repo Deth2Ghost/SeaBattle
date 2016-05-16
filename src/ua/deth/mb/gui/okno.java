@@ -29,7 +29,7 @@ public class okno extends JFrame {
 		// Заголовок окна
 		setTitle("Игра \"Морской бой\"");
 		// Границы окна: расположение и размеры
-		setBounds(0, 0, 1200, 600);
+		setBounds(0, 0, 900, 600);
 		// Операция при закрытии окна - завершение приложения
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		WindowListener exitListener = new WindowAdapter() {
